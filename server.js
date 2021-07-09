@@ -1,6 +1,8 @@
 //Loading npm packages
 const express = require('express');
 const path = require('path');
+const http = require('http');
+const fs = require('fs');
 
 //Create instance of express to serve endpoints
 const app = express();
@@ -49,5 +51,49 @@ res.json(newReservations);
   
 
 
+
+
+
+
+const displayHome = (req, res) => {
+    fs.readFile(`${__dirname}/home.html`, (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { 'Content-Type': 'text/html'});
+        res.end(data);
+    });
+};
+
+const displayReserve = (req, res) => {
+    fs.readFile(`${__dirname}/reserve.html`, (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { 'Content-Type': 'text/html'});
+        res.end(data);
+    });
+};
+
+const displayTable = (req, res) => {
+    fs.readFile(`${__dirname}/table.html`, (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { 'Content-Type': 'text/html'});
+        res.end(data);
+    });
+};
+
+const server = http.createServer((req, res) => {
+    const path = req.url;
+
+    switch (path) {
+        case '/home.html':
+            return displayHome(path, res);
+        case '/reserve.html':
+            return displayReserve(path, res);
+        case '/table.html':
+            return displayTable(path, res);
+        default:
+            return displayHome(path, res);
+        };
+});
+
+
 //Listen for activity
-app.listen(PORT, () => console.log(`Express server currently running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Express server currently running on port ${PORT}`));
